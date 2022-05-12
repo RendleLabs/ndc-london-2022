@@ -17,5 +17,9 @@
       <GrpcServices>Client</GrpcServices>
     </Protobuf>
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Orders.PubSub\Orders.PubSub.csproj" />
+  </ItemGroup>
 
 </Project>
