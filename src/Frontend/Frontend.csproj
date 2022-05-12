@@ -10,6 +10,7 @@
     <PackageReference Include="Google.Protobuf" Version="3.20.1" />
     <PackageReference Include="Grpc.AspNetCore.Server.ClientFactory" Version="2.45.0" />
     <PackageReference Include="Grpc.Tools" Version="2.45.0" />
+    <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
   </ItemGroup>
   
   <ItemGroup>
