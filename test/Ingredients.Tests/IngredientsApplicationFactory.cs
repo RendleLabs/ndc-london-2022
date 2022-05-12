@@ -23,21 +23,45 @@ public class IngredientsApplicationFactory : WebApplicationFactory<TestMarker>
     {
         builder.ConfigureServices(services =>
         {
-            services.RemoveAll<IToppingData>();
-
-            var toppings = new List<ToppingEntity>
-            {
-                new("cheese", "Cheese", 0.5d, 10),
-                new("tomato", "Tomato", 0.75d, 10)
-            };
-
-            var toppingSub = Substitute.For<IToppingData>();
-            
-            toppingSub.GetAsync(Arg.Any<CancellationToken>())
-                .Returns(toppings);
-            
-            services.AddSingleton(toppingSub);
+            SubToppingData(services);
+            SubCrustData(services);
         });
         base.ConfigureWebHost(builder);
+    }
+
+    private static void SubToppingData(IServiceCollection services)
+    {
+        services.RemoveAll<IToppingData>();
+
+        var toppings = new List<ToppingEntity>
+        {
+            new("cheese", "Cheese", 0.5d, 10),
+            new("tomato", "Tomato", 0.75d, 10)
+        };
+
+        var toppingSub = Substitute.For<IToppingData>();
+
+        toppingSub.GetAsync(Arg.Any<CancellationToken>())
+            .Returns(toppings);
+
+        services.AddSingleton(toppingSub);
+    }
+    
+    private static void SubCrustData(IServiceCollection services)
+    {
+        services.RemoveAll<ICrustData>();
+
+        var toppings = new List<CrustEntity>
+        {
+            new("thin9", "Thin 9in", 9, 5d, 10),
+            new("deep9", "Deep 9in", 9, 6d, 10),
+        };
+
+        var toppingSub = Substitute.For<ICrustData>();
+
+        toppingSub.GetAsync(Arg.Any<CancellationToken>())
+            .Returns(toppings);
+
+        services.AddSingleton(toppingSub);
     }
 }

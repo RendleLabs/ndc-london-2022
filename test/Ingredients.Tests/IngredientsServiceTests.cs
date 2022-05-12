@@ -25,4 +25,16 @@ public class IngredientsServiceTests : IClassFixture<IngredientsApplicationFacto
             t => Assert.Equal("tomato", t.Id)
             );
     }
+    
+    [Fact]
+    public async Task GetsCrusts()
+    {
+        var client = _factory.CreateGrpcClient();
+        var response = await client.GetCrustsAsync(new GetCrustsRequest());
+        
+        Assert.Collection(response.Crusts,
+            t => Assert.Equal("thin9", t.Id),
+            t => Assert.Equal("deep9", t.Id)
+            );
+    }
 }
