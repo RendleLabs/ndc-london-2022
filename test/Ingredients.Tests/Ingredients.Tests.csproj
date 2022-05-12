@@ -34,6 +34,10 @@
   <ItemGroup>
     <Protobuf Include="../../src/Ingredients/Protos/ingredients.proto" GrpcServices="Client">
       <Link>Protos/ingredients.proto</Link>
+      <Access>Internal</Access>
+    </Protobuf>
+    <Protobuf Include="Protos/decimal.proto">
+      <GrpcServices>None</GrpcServices>
     </Protobuf>
   </ItemGroup>
 

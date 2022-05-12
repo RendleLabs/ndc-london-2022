@@ -33,6 +33,7 @@ internal class IngredientsImpl : IngredientsService.IngredientsServiceBase
                     {
                         Id = t.Id,
                         Name = t.Name,
+                        DoublePrice = t.Price,
                         Price = t.Price
                     })
                 }

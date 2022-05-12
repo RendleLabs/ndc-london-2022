@@ -11,7 +11,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Protobuf Include="Protos/ingredients.proto" GrpcServices="Server" Access="Internal" />
+    <Protobuf Include="Protos/ingredients.proto" GrpcServices="Server" Access="Internal" ProtoRoot="Protos" />
+    <Protobuf Include="Protos/decimal.proto" GrpcServices="None" Access="Internal" />
   </ItemGroup>
   
   <ItemGroup>
