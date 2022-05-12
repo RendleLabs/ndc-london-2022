@@ -20,6 +20,9 @@
     <Protobuf Include="Protos\ingredients.proto" ProtoRoot="Protos">
       <GrpcServices>Client</GrpcServices>
     </Protobuf>
+    <Protobuf Include="Protos\orders.proto">
+      <GrpcServices>Client</GrpcServices>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

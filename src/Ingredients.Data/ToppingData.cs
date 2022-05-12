@@ -50,7 +50,7 @@ public class ToppingData : IToppingData
             ToppingEntity entity;
             try
             {
-                var response = await _client.GetEntityAsync<ToppingEntity>("topping", id, cancellationToken: token);
+                var response = await _client.GetEntityAsync<ToppingEntity>("toppings", id, cancellationToken: token);
                 entity = response.Value;
             }
             catch (RequestFailedException ex) when (ex.Status == 404)
