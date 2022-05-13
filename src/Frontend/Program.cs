@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
+var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients")
                      ?? new Uri("https://localhost:5003");
 
 builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
@@ -14,7 +14,7 @@ builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
     o.Address = ingredientsUri;
 });
 
-var ordersUri = builder.Configuration.GetServiceUri("Orders", "https")
+var ordersUri = builder.Configuration.GetServiceUri("Orders")
                 ?? new Uri("https://localhost:5005");
 
 builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o =>
