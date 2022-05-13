@@ -1,3 +1,5 @@
+using Frontend;
+using Grpc.Core;
 using Ingredients.Protos;
 using Orders.Protos;
 
@@ -9,18 +11,29 @@ builder.Services.AddControllersWithViews();
 var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
                      ?? new Uri("https://localhost:5003");
 
-builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
-{
-    o.Address = ingredientsUri;
-});
+builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; });
 
 var ordersUri = builder.Configuration.GetServiceUri("Orders", "https")
                 ?? new Uri("https://localhost:5005");
 
-builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o =>
-{
-    o.Address = ordersUri;
-});
+builder.Services.AddHttpClient<AuthHelper>()
+    .ConfigureHttpClient(client =>
+    {
+        client.BaseAddress = ordersUri;
+        client.DefaultRequestVersion = new Version(2, 0);
+    });
+
+builder.Services.AddGrpcClient<OrderService.OrderServiceClient>(o => { o.Address = ordersUri; })
+    .ConfigureChannel((provider, channel) =>
+    {
+        var authHelper = provider.GetRequiredService<AuthHelper>();
+        var callCredentials = CallCredentials.FromInterceptor(async (context, metadata) =>
+        {
+            var token = await authHelper.GetTokenAsync();
+            metadata.Add("Authorization", $"Bearer {token}");
+        });
+        channel.Credentials = ChannelCredentials.Create(ChannelCredentials.SecureSsl, callCredentials);
+    });
 
 var app = builder.Build();
 
