@@ -18,9 +18,15 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var toppings = await GetToppingsAsync();
-        var crusts = await GetCrustsAsync();
-        var viewModel = new HomeViewModel(toppings, crusts);
+        var activity = Telemetry.StartActivity("GetIngredients", ActivityKind.Client);
+        
+        var toppings = GetToppingsAsync();
+        var crusts = GetCrustsAsync();
+        await Task.WhenAll(toppings, crusts);
+        
+        activity?.Dispose();
+        
+        var viewModel = new HomeViewModel(toppings.Result, crusts.Result);
         return View(viewModel);
     }
 

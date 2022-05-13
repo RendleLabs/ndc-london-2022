@@ -1,9 +1,11 @@
 using Ingredients.Protos;
+using JaegerTracing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Orders.PubSub;
 using Orders.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddJaegerTracing();
 builder.WebHost.ConfigureKestrel(k =>
 {
     k.ConfigureEndpointDefaults(o => o.Protocols = HttpProtocols.Http2);
