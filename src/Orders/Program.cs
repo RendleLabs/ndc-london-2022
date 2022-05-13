@@ -10,13 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddGrpc();
 
+builder.Services.AddHttpClient("ingredients")
+    .ConfigurePrimaryHttpMessageHandler(DevelopmentModeCertificateHelper.CreateClientHandler);
+
 var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
                      ?? new Uri("https://localhost:5003");
 
-builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o =>
-{
-    o.Address = ingredientsUri;
-});
+builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; })
+    .ConfigureChannel(((provider, channel) =>
+    {
+        channel.HttpHandler = null;
+        channel.HttpClient = provider.GetRequiredService<IHttpClientFactory>()
+            .CreateClient("ingredients");
+        channel.DisposeHttpClient = true;
+    }));
 
 builder.Services.AddOrderPubSub();
 

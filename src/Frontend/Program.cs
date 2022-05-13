@@ -1,5 +1,7 @@
+using AuthHelp;
 using Frontend;
 using Grpc.Core;
+using Grpc.Core.Interceptors;
 using Ingredients.Protos;
 using Orders.Protos;
 
@@ -11,7 +13,18 @@ builder.Services.AddControllersWithViews();
 var ingredientsUri = builder.Configuration.GetServiceUri("Ingredients", "https")
                      ?? new Uri("https://localhost:5003");
 
-builder.Services.AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; });
+builder.Services.AddHttpClient("ingredients")
+    .ConfigurePrimaryHttpMessageHandler(DevelopmentModeCertificateHelper.CreateClientHandler);
+
+builder.Services
+    .AddGrpcClient<IngredientsService.IngredientsServiceClient>(o => { o.Address = ingredientsUri; })
+    .ConfigureChannel(((provider, channel) =>
+    {
+        channel.HttpHandler = null;
+        channel.HttpClient = provider.GetRequiredService<IHttpClientFactory>()
+            .CreateClient("ingredients");
+        channel.DisposeHttpClient = true;
+    }));
 
 var ordersUri = builder.Configuration.GetServiceUri("Orders", "https")
                 ?? new Uri("https://localhost:5005");
